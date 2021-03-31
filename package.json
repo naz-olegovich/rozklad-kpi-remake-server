@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/naz-olegovich/rozklad_kpi_remake#readme",
   "dependencies": {
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
     "mongodb": "^3.6.5",
     "node-fetch": "^2.6.1"

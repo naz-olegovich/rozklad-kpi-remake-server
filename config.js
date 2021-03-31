@@ -1,7 +1,7 @@
 const url = "mongodb://localhost:27017/";
 const dbName = "rozklad_kpi_remake";
 const dbCollection = "timetable";
-const port = 3002
+const port = 3000
 const baseURL = `http://localhost:${port}`;
 
 module.exports = {
