@@ -1,2 +1,1 @@
-# rozklad-kpi-remake-server
-Server part for KPI schedule
+# rozklad_kpi_remake

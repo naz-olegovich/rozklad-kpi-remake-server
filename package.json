@@ -1,0 +1,33 @@
+{
+  "name": "rozklad_kpi_remake",
+  "version": "1.0.0",
+  "description": "Server for schedule",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naz-olegovich/rozklad_kpi_remake.git"
+  },
+  "author": "Nazar Chopyk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naz-olegovich/rozklad_kpi_remake/issues"
+  },
+  "homepage": "https://github.com/naz-olegovich/rozklad_kpi_remake#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.5",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongo"
+  ]
+}
