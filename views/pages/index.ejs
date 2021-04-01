@@ -21,6 +21,9 @@
         <li>
             <%= link.name %>: <a href="<%= link.link %>"> <%= link.link %></a>
         </li>
+        <% if (link.space) { %>
+            <hr>
+        <% } %>
     <% }); %>
 </ul>
 

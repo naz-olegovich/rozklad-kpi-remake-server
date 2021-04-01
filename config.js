@@ -1,6 +1,7 @@
 const url = "mongodb://localhost:27017/";
 const dbName = "rozklad_kpi_remake";
-const dbCollection = "timetable";
+const dbGroupsCollection = "groupsTimetable";
+const dbTeachersCollection = "teachersLessons";
 const port = 3000
 const baseURL = `http://localhost:${port}`;
 
@@ -8,7 +9,8 @@ module.exports = {
     connection: {
         url: url,
         db: dbName,
-        collection: dbCollection,
+        dbGroupsCollection: dbGroupsCollection,
+        dbTeachersCollection: dbTeachersCollection
     },
     // The secret for the encryption of the jsonwebtoken
     JWTsecret: 'mysecret',
