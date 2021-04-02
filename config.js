@@ -12,10 +12,13 @@ module.exports = {
         dbGroupsCollection: dbGroupsCollection,
         dbTeachersCollection: dbTeachersCollection
     },
+    service:{
+        port: process.env.PORT || 3000,
+        host: process.env.HOST || "localhost:3000",
+    },
     // The secret for the encryption of the jsonwebtoken
     JWTsecret: 'mysecret',
     baseURL: baseURL,
-    port: port,
     // The credentials and information for OAuth2
     oauth2Credentials: {
         client_id: "674271237644-qvhjpok5r8o45cqn9tki3d28odqb8hg8.apps.googleusercontent.com",

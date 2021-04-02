@@ -1,0 +1,455 @@
+swagger: "2.0"
+info:
+  description: "This is server for KPI schedule. \nYou can find out more about project at [GitHub](https://github.com/naz-olegovich/rozklad-kpi-remake-server)"
+  version: "1.0.0"
+  title: "ROAZKLAD KPI API"
+  # termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "nazar.chopyk@gmail.com"
+    # license:
+    # name: "Apache 2.0"
+    # url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+# basePath: "/v2"
+tags:
+  - name: "Groups"
+    description: "Schedule for groups"
+    # externalDocs:
+    #   description: "Find out more"
+    #   url: "http://swagger.io"
+  - name: "Teachers"
+    description: "Schedule for teachers"
+# schemes:
+# - "https"
+# - "http"
+
+paths:
+  /api/groups:
+    get:
+      tags:
+        - "Groups"
+      summary: "Get a list of all the groups"
+      description: "Return a list of groups"
+      operationId: "getGroups"
+      consumes:
+        - "application/json"
+
+      produces:
+        - "application/json"
+      parameters:
+        - in: "query"
+          name: "limit"
+          description: "Limits the number of groups to be returned"
+          required: false
+          type: integer
+
+        - in: "query"
+          name: "offset"
+          description: "Offset list of groups"
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GroupLists"
+        "404":
+          description: "Groups not found"
+
+  /api/groups/{groupId}/timetable:
+    get:
+      tags:
+        - "Groups"
+      summary: "Get schedule for group by id"
+      description: ""
+      operationId: "getGroupTimetableById"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of necessary group"
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GroupTimetable"
+
+  /api/groups/{groupName}/timetable:
+    get:
+      tags:
+        - "Groups"
+      summary: "Get schedule for group by name"
+      description: ""
+      operationId: "getGroupTimetableByName"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupName"
+          in: "path"
+          description: "ID of necessary group"
+          required: true
+          type: "string"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GroupTimetable"
+
+
+
+
+  /api/teachers:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get a list of all the teachers"
+      description: "Return a list of teachers"
+      operationId: "getTeachersList"
+
+      parameters:
+        - in: "query"
+          name: "limit"
+          description: "Limits the number of teachers to be returned"
+          required: false
+          type: integer
+
+        - in: "query"
+          name: "offset"
+          description: "Offset list of teachers"
+          required: false
+          type: integer
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TeacherLists"
+        "404":
+          description: "Teachers not found"
+
+
+
+  /api/teachers/{teacherId}/lessons:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get lessons for teacher by id"
+      description: ""
+      operationId: "getTeacherLessonsById"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "teacherId"
+          in: "path"
+          description: "ID of necessary teacher"
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/TeacherLessons"
+
+  /api/teachers/{teacherName}/lessons:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get lessons for teacher by name"
+      description: ""
+      operationId: "getTeacherLessonsByName"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "teacherName"
+          in: "path"
+          description: "Name of necessary teacher"
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/TeacherLessons"
+
+
+
+
+# securityDefinitions:
+#   petstore_auth:
+#     type: "oauth2"
+#     authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+#     flow: "implicit"
+#     scopes:
+#       write:pets: "modify pets in your account"
+#       read:pets: "read your pets"
+#   api_key:
+#     type: "apiKey"
+#     name: "api_key"
+#     in: "header"
+definitions:
+  GroupLists:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        default: 537
+
+      name:
+        type: "string"
+        default: "ів-91"
+
+      prefix:
+        type: "string"
+        default: "ів"
+
+      okr:
+        type: "string"
+        default: "bachelor"
+
+      type:
+        type: "string"
+        default: "daily"
+
+
+  GroupTimetable:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        default: 537
+
+      name:
+        type: "string"
+        default: "ів-91"
+
+      prefix:
+        type: "string"
+        default: "ів"
+
+      okr:
+        type: "string"
+        default: "bachelor"
+
+      type:
+        type: "string"
+        default: "daily"
+
+      weeks:
+        type: "object"
+        properties:
+          week_number:
+            type: "integer"
+            default: 1
+
+          days:
+            type: "object"
+            properties:
+
+              "1":
+                type: "object"
+                properties:
+                  day_name:
+                    type: "string"
+                    default: "Понеділок"
+                  day_number:
+                    type: "integer"
+                    default: 1
+                  lessons:
+                    type: "object"
+                    properties:
+                      lesson_id:
+                        type: "integer"
+                        default: 837
+
+                      group_id:
+                        type: "integer"
+                        default: 537
+
+                      day_number:
+                        type: "integer"
+                        default: 1
+
+                      day_name:
+                        type: "string"
+                        default: "Понеділок"
+
+                      lesson_name:
+                        type: "string"
+                        default: "Методи наукових досліджень"
+
+                      lesson_full_name:
+                        type: "string"
+                        default: "Методи наукових досліджень"
+
+                      lesson_number:
+                        type: "integer"
+                        default: 1
+
+                      lesson_room:
+                        type: "integer"
+
+                      lesson_type:
+                        type: "string"
+                        default: "Лек"
+
+                      teacher_name:
+                        type: "string"
+                        default: "доц. Волокита А. М."
+
+                      lesson_week:
+                        type: "integer"
+                        default: 1
+
+                      time_start:
+                        type: "string"
+                        default: "08:30:00"
+
+                      time_end:
+                        type: "string"
+                        default: "10:05:00"
+
+                      rate:
+                        type: "integer"
+                        default: 1
+
+
+                      teachers:
+                        type: "object"
+                        properties:
+                          teacher_id:
+                            type: "integer"
+                            default: 529
+
+                          teacher_name:
+                            type: "string"
+                            default: "Волокита Артем Миколайович"
+
+                          teacher_full_name:
+                            type: "string"
+                            default: "доцент Волокита Артем Миколайович"
+
+                          teacher_short_name:
+                            type: "string"
+                            default: "доц. Волокита А. М."
+
+                          teacher_url:
+                            type: "string"
+                            default: "http://rozklad.kpi.ua/Schedules/ViewSchedule.aspx?v=45bdd839-1915-4797-993e-fc2268e7234a"
+                          teacher_rating:
+                            type: "string"
+                            default: "3.147"
+
+                      rooms:
+                        type: "object"
+                        properties:
+                          room_id:
+                            type: "integer"
+                            default: 143
+                          room_name:
+                            type: "integer"
+                            default: -18,
+                          room_latitude:
+                            type: "number"
+                            default: 50.447021
+                          room_longitude:
+                            type: "number"
+
+
+  TeacherLists:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+
+      name:
+        type: "string"
+
+      fullName:
+        type: "string"
+
+      shortName:
+        type: "string"
+
+  TeacherLessons:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+
+      name:
+        type: "string"
+
+      fullName:
+        type: "string"
+
+      shortName:
+        type: "string"
+
+      lessons:
+        type: "object"
+        properties:
+          lesson_id:
+            type: "integer"
+          day_number:
+            type: "integer"
+          day_name:
+            type: "string"
+          lesson_name:
+            type: "string"
+          lesson_full_name:
+            type: "string"
+          lesson_number:
+            type: "integer"
+          lesson_room:
+            type: "string"
+          lesson_type:
+            type: "string"
+          teacher_name:
+            type: "string"
+          lesson_week:
+            type: "integer"
+          time_start:
+            type: "string"
+          time_end:
+            type: "string"
+          rate:
+            type: "number"
+          teachers:
+            type: "object"
+          rooms:
+            type: "object"
+            properties:
+              room_id:
+                type: "integer"
+              room_name:
+                type: "string"
+              room_latitude:
+                type: "number"
+              room_longitude:
+                type: "number"
+
+# externalDocs:
+#   description: "Find out more about Swagger"
+#   url: "http://swagger.io"

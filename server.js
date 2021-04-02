@@ -2,10 +2,12 @@ const express = require('express')
 const {MongoClient} = require('mongodb');
 const config = require("./config");
 const bodyParser = require("body-parser");
+const swaggerUi = require('swagger-ui-express')
+const YAML = require('yamljs')
 
 
 const app = express();
-const PORT = config.port;
+const PORT = config.service.port;
 const dbUrl = config.connection.url;
 const dbName = config.connection.db;
 const dbGroupsCollection = config.connection.dbGroupsCollection;
@@ -14,7 +16,7 @@ const dbTeacherCollection = config.connection.dbTeachersCollection;
 
 let db;
 app.set('json spaces', 2);
-// app.use(express.urlencoded({extended: true}));
+// app.use(express.urlencoded({extended: false}));
 // app.use(bodyParser.json());
 
 // Setting up EJS Views
@@ -48,10 +50,9 @@ app.get('/api/groups', (req, res) => {
             .then(items => {
                 res.json(items);
             })
-            .catch(err => {
-                res.json({statusCode: 404, message: "Groups not found"});
-                throw err;
-            })
+            .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
+
+
     } else {
         db.collection(dbGroupsCollection).find().project(projection)
             .toArray()
@@ -118,21 +119,32 @@ app.get('/api/teachers/:teacher/lessons', (req, res) => {
         .catch(err => res.json({statusCode: 500, message: `Error occurred`}));
 })
 
-app.get('/', (req, res) => {
-    const links = [
-        {name: 'Groups', link: '/api/groups'},
-        {name: 'Groups with limitations', link: '/api/groups?limit=15&offset=3', space: true},
-        {name: 'Timetable for group by name', link: '/api/groups/ів-91/timetable'},
-        {name: 'Timetable for group by id', link: '/api/groups/537/timetable', space: true},
-        {name: 'Teachers', link: '/api/teachers'},
-        {name: 'Teachers with limitations', link: '/api/teachers?limit=15&offset=3'},
-        {name: 'Teacher lessons by name', link: '/api/teachers/Абдулін Михайло Загретдинович/lessons'},
-        {name: 'Teacher lessons by id', link: '/api/teachers/4/lessons'},
+// app.get('/', (req, res) => {
+//     const links = [
+//         {name: 'Groups', link: '/api/groups'},
+//         {name: 'Groups with limitations', link: '/api/groups?limit=15&offset=3', space: true},
+//         {name: 'Timetable for group by name', link: '/api/groups/ів-91/timetable'},
+//         {name: 'Timetable for group by id', link: '/api/groups/537/timetable', space: true},
+//         {name: 'Teachers', link: '/api/teachers'},
+//         {name: 'Teachers with limitations', link: '/api/teachers?limit=15&offset=3'},
+//         {name: 'Teacher lessons by name', link: '/api/teachers/Абдулін Михайло Загретдинович/lessons'},
+//         {name: 'Teacher lessons by id', link: '/api/teachers/4/lessons'},
+//
+//     ];
+//
+//     res.render('pages/index', {links: links});
+// });
 
-    ];
+let swaggerDocument = YAML.load('./jace-ner-api.yaml');
+swaggerDocument.host = config.service.host
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument,{customCssUrl:"sw-theme.css"}));
 
-    res.render('pages/index', {links: links});
-});
+
+// console.log("Gateway config:\n", JSON.stringify(config, null," "))
+// console.log(JSON.stringify(swaggerDocument, null, " "))
+// console.log("Available routes:\n", require("./src/utils").availableRoutesString(app))
+
+
 
 app.get('*', function (req, res) {
     res.status(404).send('Not found');
