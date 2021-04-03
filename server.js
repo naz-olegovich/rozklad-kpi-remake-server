@@ -1,9 +1,9 @@
-const express = require('express')
+const express = require('express');
 const {MongoClient} = require('mongodb');
 const config = require("./config");
 const bodyParser = require("body-parser");
-const swaggerUi = require('swagger-ui-express')
-const YAML = require('yamljs')
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 
 const app = express();
@@ -12,25 +12,22 @@ const dbUrl = config.connection.url;
 const dbName = config.connection.db;
 const dbGroupsCollection = config.connection.dbGroupsCollection;
 const dbTeacherCollection = config.connection.dbTeachersCollection;
+let db; // global db connection
 
 
-let db;
-app.set('json spaces', 2);
+app.set('json spaces', 2);  // To return formatted json
+app.set('view engine', 'ejs'); // Setting up EJS Views
 // app.use(express.urlencoded({extended: false}));
 // app.use(bodyParser.json());
 
-// Setting up EJS Views
-app.set('view engine', 'ejs');
-
-
-// Initialize connection once
+// Initialize connection once to db
 MongoClient.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true}, async function (err, client) {
     if (err) throw err;
     db = client.db(dbName);
 
     // Start the application after the database connection is ready
     app.listen(PORT, () => {
-        console.log(`Server has been started on http://localhost:${PORT}/`)
+        console.log(`Server has been started on http://localhost:${PORT}/`);
     });
     console.log(`Listening on port ${PORT}`);
 });
@@ -39,84 +36,62 @@ MongoClient.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true}, as
 app.get('/api/groups', (req, res) => {
     const projection = {"weeks": 0};
     const queryFilterParams = req.query;
-    const limit = parseInt(queryFilterParams.limit, 10);
-    const offset = parseInt(queryFilterParams.offset, 10);
+    const limit = parseInt(queryFilterParams.limit, 10) || 500;
+    const offset = parseInt(queryFilterParams.offset, 10) || 0;
 
-    if (limit || offset) {
-        db.collection(dbGroupsCollection).find().project(projection)
-            .skip(offset)
-            .limit(limit)
-            .toArray()
-            .then(items => {
-                res.json(items);
-            })
-            .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
-
-
-    } else {
-        db.collection(dbGroupsCollection).find().project(projection)
-            .toArray()
-            .then(items => {
-                res.json(items);
-            })
-            .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
-    }
+    db.collection(dbGroupsCollection).find().project(projection)
+        .skip(offset)
+        .limit(limit)
+        .toArray()
+        .then(items => {
+            items ?
+                res.status(200).json(items) :
+                res.status(404).json({statusCode: 404, message: "Groups not found or db is empty"});
+        })
+        .catch(err => res.status(500).json({statusCode: 500, message: "Server error occurred"}));
 })
 
 
 app.get('/api/groups/:group/timetable', (req, res) => {
-    const query = {$or: [{_id: parseInt(req.params.group, 10)}, {name: req.params.group}]}
+    const query = {$or: [{_id: parseInt(req.params.group, 10)}, {name: req.params.group}]};
     db.collection(dbGroupsCollection).findOne(query)
         .then(dbResult => {
-            if (dbResult != null) {
-                res.json(dbResult);
-            } else {
-                res.json({statusCode: 404, message: "Group not found"});
-            }
+            dbResult ?
+                res.status(200).json(dbResult) :
+                res.status(404).json({statusCode: 404, message: "Group not found"});
         })
-        .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
-
+        .catch(err => res.status(500).json({statusCode: 500, message: "Server error occurred"}));
 })
 
 
 app.get('/api/teachers', (req, res) => {
     const projection = {"lessons": 0};
     const queryFilterParams = req.query;
-    const limit = parseInt(queryFilterParams.limit, 10);
-    const offset = parseInt(queryFilterParams.offset, 10);
+    const limit = parseInt(queryFilterParams.limit, 10) || 500;
+    const offset = parseInt(queryFilterParams.offset, 10) || 0;
 
-    if (limit || offset) {
-        db.collection(dbTeacherCollection).find().project(projection)
-            .skip(offset)
-            .limit(limit)
-            .toArray()
-            .then(items => {
-                res.json(items);
-            })
-            .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
-    } else {
-        db.collection(dbTeacherCollection).find().project(projection).toArray()
-            .then(items => {
-                res.json(items);
-            })
-            .catch(err => res.json({statusCode: 500, message: "Error occurred"}));
-    }
-
+    db.collection(dbTeacherCollection).find().project(projection)
+        .skip(offset)
+        .limit(limit)
+        .toArray()
+        .then(items => {
+            items ?
+                res.status(200).json(items) :
+                res.status(404).json({statusCode: 404, message: "Teachers not found or db is empty"});
+        })
+        .catch(err => res.status(500).json({statusCode: 500, message: "Error occurred"}));
 })
 
 
 app.get('/api/teachers/:teacher/lessons', (req, res) => {
-    const query = {$or: [{_id: req.params.teacher}, {name: req.params.teacher}]} //change id value to int
+    const query = {$or: [{_id: req.params.teacher}, {name: req.params.teacher}]}; // dont forget to change id value to int
     db.collection(dbTeacherCollection).findOne(query)
         .then(dbResult => {
-
-            if (dbResult != null) {
-                res.json(dbResult);
-            } else {
-                res.json({statusCode: 404, message: "Teacher not found"});
-            }
+            dbResult ?
+                res.status(200).json(dbResult) :
+                res.status(404).json({statusCode: 404, message: "Teacher not found"});
         })
-        .catch(err => res.json({statusCode: 500, message: `Error occurred`}));
+        .catch(err => res.status(500).json({statusCode: 500, message: `Error occurred`}));
 })
 
 // app.get('/', (req, res) => {
@@ -135,16 +110,10 @@ app.get('/api/teachers/:teacher/lessons', (req, res) => {
 //     res.render('pages/index', {links: links});
 // });
 
-let swaggerDocument = YAML.load('./jace-ner-api.yaml');
-swaggerDocument.host = config.service.host
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument,{customCssUrl:"sw-theme.css"}));
 
-
-// console.log("Gateway config:\n", JSON.stringify(config, null," "))
-// console.log(JSON.stringify(swaggerDocument, null, " "))
-// console.log("Available routes:\n", require("./src/utils").availableRoutesString(app))
-
-
+let swaggerDocument = YAML.load('./server-api.yaml');
+swaggerDocument.host = config.service.host;
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {customCssUrl: "sw-theme.css"}));
 
 app.get('*', function (req, res) {
     res.status(404).send('Not found');

@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "This is server for KPI schedule. \nYou can find out more about project at [GitHub](https://github.com/naz-olegovich/rozklad-kpi-remake-server)"
+  description: "This is a server for the KPI schedule. \nYou can find out more about project at [GitHub](https://github.com/naz-olegovich/rozklad-kpi-remake-server)"
   version: "1.0.0"
   title: "ROAZKLAD KPI API"
   # termsOfService: "http://swagger.io/terms/"
@@ -29,7 +29,7 @@ paths:
       tags:
         - "Groups"
       summary: "Get a list of all the groups"
-      description: "Return a list of groups"
+      description: "Returns a list of groups"
       operationId: "getGroups"
       consumes:
         - "application/json"
@@ -42,28 +42,38 @@ paths:
           description: "Limits the number of groups to be returned"
           required: false
           type: integer
+          default: 500
 
         - in: "query"
           name: "offset"
-          description: "Offset list of groups"
+          description: "Offsets list of groups"
           required: false
           type: integer
+          default: 0
       responses:
         "200":
-          description: "successful operation"
+          description: "successful response"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/GroupLists"
         "404":
-          description: "Groups not found"
+          description: "Groups not found or db is empty"
+          schema:
+            items:
+              $ref: "#/definitions/GroupListsError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
   /api/groups/{groupId}/timetable:
     get:
       tags:
         - "Groups"
       summary: "Get schedule for group by id"
-      description: ""
+      description: "Returns the schedule of a specific group in a hierarchical form"
       operationId: "getGroupTimetableById"
       consumes:
         - "multipart/form-data"
@@ -81,13 +91,23 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/GroupTimetable"
+        "404":
+          description: "Group not found"
+          schema:
+            items:
+              $ref: "#/definitions/GroupError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
   /api/groups/{groupName}/timetable:
     get:
       tags:
         - "Groups"
       summary: "Get schedule for group by name"
-      description: ""
+      description: "Returns the schedule of a specific group in a hierarchical form"
       operationId: "getGroupTimetableByName"
       consumes:
         - "multipart/form-data"
@@ -105,6 +125,16 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/GroupTimetable"
+        "404":
+          description: "Group not found"
+          schema:
+            items:
+              $ref: "#/definitions/GroupError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
 
 
@@ -114,7 +144,7 @@ paths:
       tags:
         - "Teachers"
       summary: "Get a list of all the teachers"
-      description: "Return a list of teachers"
+      description: "Returns a list of teachers"
       operationId: "getTeachersList"
 
       parameters:
@@ -123,21 +153,31 @@ paths:
           description: "Limits the number of teachers to be returned"
           required: false
           type: integer
+          default: 500
 
         - in: "query"
           name: "offset"
-          description: "Offset list of teachers"
+          description: "Offsets list of teachers"
           required: false
           type: integer
+          default: 0
       responses:
         "200":
-          description: "successful operation"
+          description: "successful response"
           schema:
             type: "array"
             items:
               $ref: "#/definitions/TeacherLists"
         "404":
-          description: "Teachers not found"
+          description: "Teachers not found or db is empty"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherListsError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
 
 
@@ -146,7 +186,7 @@ paths:
       tags:
         - "Teachers"
       summary: "Get lessons for teacher by id"
-      description: ""
+      description: "Returns a list of subjects for a necessary teacher"
       operationId: "getTeacherLessonsById"
       consumes:
         - "multipart/form-data"
@@ -161,16 +201,26 @@ paths:
 
       responses:
         "200":
-          description: "successful operation"
+          description: "successful response"
           schema:
             $ref: "#/definitions/TeacherLessons"
+        "404":
+          description: "Teacher not found"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
   /api/teachers/{teacherName}/lessons:
     get:
       tags:
         - "Teachers"
       summary: "Get lessons for teacher by name"
-      description: ""
+      description: "Returns a list of subjects for a necessary teacher"
       operationId: "getTeacherLessonsByName"
       consumes:
         - "multipart/form-data"
@@ -181,13 +231,23 @@ paths:
           in: "path"
           description: "Name of necessary teacher"
           required: true
-          type: "integer"
+          type: "string"
 
       responses:
         "200":
-          description: "successful operation"
+          description: "successful response"
           schema:
             $ref: "#/definitions/TeacherLessons"
+        "404":
+          description: "Teacher not found"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
 
 
@@ -210,24 +270,20 @@ definitions:
     properties:
       id:
         type: "integer"
-        format: "int32"
-        default: 537
 
       name:
         type: "string"
-        default: "ів-91"
 
       prefix:
         type: "string"
-        default: "ів"
 
       okr:
         type: "string"
-        default: "bachelor"
 
       type:
         type: "string"
-        default: "daily"
+
+
 
 
   GroupTimetable:
@@ -235,31 +291,24 @@ definitions:
     properties:
       id:
         type: "integer"
-        format: "int32"
-        default: 537
 
       name:
         type: "string"
-        default: "ів-91"
 
       prefix:
         type: "string"
-        default: "ів"
 
       okr:
         type: "string"
-        default: "bachelor"
 
       type:
         type: "string"
-        default: "daily"
 
       weeks:
         type: "object"
         properties:
           week_number:
             type: "integer"
-            default: 1
 
           days:
             type: "object"
@@ -270,67 +319,54 @@ definitions:
                 properties:
                   day_name:
                     type: "string"
-                    default: "Понеділок"
+
                   day_number:
                     type: "integer"
-                    default: 1
+
                   lessons:
                     type: "object"
                     properties:
                       lesson_id:
                         type: "integer"
-                        default: 837
 
                       group_id:
                         type: "integer"
-                        default: 537
 
                       day_number:
                         type: "integer"
-                        default: 1
 
                       day_name:
                         type: "string"
-                        default: "Понеділок"
 
                       lesson_name:
                         type: "string"
-                        default: "Методи наукових досліджень"
 
                       lesson_full_name:
                         type: "string"
-                        default: "Методи наукових досліджень"
 
                       lesson_number:
                         type: "integer"
-                        default: 1
 
                       lesson_room:
                         type: "integer"
 
                       lesson_type:
                         type: "string"
-                        default: "Лек"
 
                       teacher_name:
                         type: "string"
-                        default: "доц. Волокита А. М."
 
                       lesson_week:
                         type: "integer"
-                        default: 1
 
                       time_start:
                         type: "string"
-                        default: "08:30:00"
 
                       time_end:
                         type: "string"
-                        default: "10:05:00"
 
                       rate:
                         type: "integer"
-                        default: 1
 
 
                       teachers:
@@ -338,41 +374,37 @@ definitions:
                         properties:
                           teacher_id:
                             type: "integer"
-                            default: 529
 
                           teacher_name:
                             type: "string"
-                            default: "Волокита Артем Миколайович"
 
                           teacher_full_name:
                             type: "string"
-                            default: "доцент Волокита Артем Миколайович"
 
                           teacher_short_name:
                             type: "string"
-                            default: "доц. Волокита А. М."
 
                           teacher_url:
                             type: "string"
-                            default: "http://rozklad.kpi.ua/Schedules/ViewSchedule.aspx?v=45bdd839-1915-4797-993e-fc2268e7234a"
+
                           teacher_rating:
                             type: "string"
-                            default: "3.147"
 
                       rooms:
                         type: "object"
                         properties:
                           room_id:
                             type: "integer"
-                            default: 143
+
                           room_name:
                             type: "integer"
-                            default: -18,
+
                           room_latitude:
                             type: "number"
-                            default: 50.447021
+
                           room_longitude:
                             type: "number"
+
 
 
   TeacherLists:
@@ -390,6 +422,8 @@ definitions:
 
       shortName:
         type: "string"
+
+
 
   TeacherLessons:
     type: "object"
@@ -449,6 +483,61 @@ definitions:
                 type: "number"
               room_longitude:
                 type: "number"
+
+  GroupListsError:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        default: 404
+
+      message:
+        type: "string"
+        default: "Groups not found or db is empty"
+
+  GroupError:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        default: 404
+
+      message:
+        type: "string"
+        default: "Group not found"
+
+  TeacherListsError:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        default: 404
+
+      message:
+        type: "string"
+        default: "Teacher not found or db is empty"
+
+  TeacherError:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        default: 404
+
+      message:
+        type: "string"
+        default: "Teacher not found"
+
+  ServerError:
+    type: "object"
+    properties:
+      statusCode:
+        type: "integer"
+        default: 500
+
+      message:
+        type: "string"
+        default: "Server error occurred"
 
 # externalDocs:
 #   description: "Find out more about Swagger"
