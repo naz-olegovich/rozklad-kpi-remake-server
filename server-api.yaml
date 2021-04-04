@@ -249,6 +249,75 @@ paths:
             items:
               $ref: "#/definitions/ServerError"
 
+  /api/teachers/{teacherName}/timetable:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get timetable for teacher by name"
+      description: "Returns the schedule for a necessary teacher in a hierarchical form"
+      operationId: "getTeacherTimetableByName"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "teacherName"
+          in: "path"
+          description: "Name of necessary teacher"
+          required: true
+          type: "string"
+
+      responses:
+        "200":
+          description: "successful response"
+          schema:
+            $ref: "#/definitions/TeacherTimatable"
+        "404":
+          description: "Teacher not found"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
+
+  /api/teachers/{teacherId}/timetable:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get timetable for teacher by id"
+      description: "Returns the schedule for a necessary teacher in a hierarchical form"
+      operationId: "getTeacherTimetableById"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "teacherId"
+          in: "path"
+          description: "Id of necessary teacher"
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "successful response"
+          schema:
+            $ref: "#/definitions/TeacherTimatable"
+        "404":
+          description: "Teacher not found"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
+
+
 
 
 
@@ -483,6 +552,123 @@ definitions:
                 type: "number"
               room_longitude:
                 type: "number"
+
+
+  TeacherTimatable:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+
+      name:
+        type: "string"
+
+      fullName:
+        type: "string"
+
+      shortName:
+        type: "string"
+
+      weeks:
+        type: "object"
+        properties:
+          week_number:
+            type: "integer"
+
+          days:
+            type: "object"
+            properties:
+
+              "1":
+                type: "object"
+                properties:
+                  day_name:
+                    type: "string"
+
+                  day_number:
+                    type: "integer"
+
+                  lessons:
+                    type: "object"
+                    properties:
+                      lesson_id:
+                        type: "integer"
+
+                      group_id:
+                        type: "integer"
+
+                      day_number:
+                        type: "integer"
+
+                      day_name:
+                        type: "string"
+
+                      lesson_name:
+                        type: "string"
+
+                      lesson_full_name:
+                        type: "string"
+
+                      lesson_number:
+                        type: "integer"
+
+                      lesson_room:
+                        type: "integer"
+
+                      lesson_type:
+                        type: "string"
+
+                      teacher_name:
+                        type: "string"
+
+                      lesson_week:
+                        type: "integer"
+
+                      time_start:
+                        type: "string"
+
+                      time_end:
+                        type: "string"
+
+                      rate:
+                        type: "integer"
+
+
+                      teachers:
+                        type: "object"
+                        properties:
+                          teacher_id:
+                            type: "integer"
+
+                          teacher_name:
+                            type: "string"
+
+                          teacher_full_name:
+                            type: "string"
+
+                          teacher_short_name:
+                            type: "string"
+
+                          teacher_url:
+                            type: "string"
+
+                          teacher_rating:
+                            type: "string"
+
+                      rooms:
+                        type: "object"
+                        properties:
+                          room_id:
+                            type: "integer"
+
+                          room_name:
+                            type: "integer"
+
+                          room_latitude:
+                            type: "number"
+
+                          room_longitude:
+                            type: "number"
 
   GroupListsError:
     type: "object"

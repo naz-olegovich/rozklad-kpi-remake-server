@@ -4,6 +4,7 @@ const config = require("./config");
 const bodyParser = require("body-parser");
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
+const jsonProcessing = require("C:/Users/Nazar/Documents/GitHub/rozklad-kpi-remake-server/src/jsonProcessing.js")
 
 
 const app = express();
@@ -16,7 +17,6 @@ let db; // global db connection
 
 
 app.set('json spaces', 2);  // To return formatted json
-app.set('view engine', 'ejs'); // Setting up EJS Views
 // app.use(express.urlencoded({extended: false}));
 // app.use(bodyParser.json());
 
@@ -84,7 +84,7 @@ app.get('/api/teachers', (req, res) => {
 
 
 app.get('/api/teachers/:teacher/lessons', (req, res) => {
-    const query = {$or: [{_id: req.params.teacher}, {name: req.params.teacher}]}; // dont forget to change id value to int
+    const query = {$or: [{_id: parseInt(req.params.teacher, 10)}, {name: req.params.teacher}]}; // dont forget to change id value to int
     db.collection(dbTeacherCollection).findOne(query)
         .then(dbResult => {
             dbResult ?
@@ -94,21 +94,25 @@ app.get('/api/teachers/:teacher/lessons', (req, res) => {
         .catch(err => res.status(500).json({statusCode: 500, message: `Error occurred`}));
 })
 
-// app.get('/', (req, res) => {
-//     const links = [
-//         {name: 'Groups', link: '/api/groups'},
-//         {name: 'Groups with limitations', link: '/api/groups?limit=15&offset=3', space: true},
-//         {name: 'Timetable for group by name', link: '/api/groups/ів-91/timetable'},
-//         {name: 'Timetable for group by id', link: '/api/groups/537/timetable', space: true},
-//         {name: 'Teachers', link: '/api/teachers'},
-//         {name: 'Teachers with limitations', link: '/api/teachers?limit=15&offset=3'},
-//         {name: 'Teacher lessons by name', link: '/api/teachers/Абдулін Михайло Загретдинович/lessons'},
-//         {name: 'Teacher lessons by id', link: '/api/teachers/4/lessons'},
-//
-//     ];
-//
-//     res.render('pages/index', {links: links});
-// });
+app.get('/api/teachers/:teacher/timetable', (req, res) => {
+    const query = {$or: [{_id: parseInt(req.params.teacher, 10)}, {name: req.params.teacher}]};
+    db.collection(dbTeacherCollection).findOne(query)
+        .then(dbResult => {
+            if (dbResult) {
+                const teacherData = {
+                    id: dbResult._id,
+                    name: dbResult.name,
+                    fullName: dbResult.fullName,
+                    shortName: dbResult.shortName
+                };
+                const timetable = jsonProcessing.createTimetable(dbResult.lessons)
+                res.status(200).json(Object.assign(teacherData, timetable))
+            } else {
+                res.status(404).json({statusCode: 404, message: "Teacher not found"})
+            }
+        })
+        .catch(err => res.status(500).json({statusCode: 500, message: `Error occurred`}));
+})
 
 
 let swaggerDocument = YAML.load('./server-api.yaml');
