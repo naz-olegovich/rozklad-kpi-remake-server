@@ -92,7 +92,7 @@ function writeGroupsScheduleToDB(dbUrl, dbName, dbCollection) {
                 await collection.deleteMany({}); //cleaning all collection
 
                 for (let group of groups) {
-                    await fetch(encodeURI(`https://api.rozklad.org.ua/v2/groups/${group.name}/timetable`))
+                    await fetch(encodeURI(`https://api.rozklad.org.ua/v2/groups/${group.id}/lessons`))
                         .then(res => res.json())
                         .then(json => {
 
@@ -102,7 +102,7 @@ function writeGroupsScheduleToDB(dbUrl, dbName, dbCollection) {
                                 prefix: group.prefix,
                                 okr: group.okr,
                                 type: group.type,
-                                weeks: (json.data) ? json.data.weeks : null
+                                lessons: (json.data) ? json.data : null
                             };
 
                             // adding schedule to db
@@ -176,5 +176,5 @@ function writeTeachersScheduleToDB(dbUrl, dbName, dbCollection) {
 }
 
 module.exports.writeGroupsScheduleToDB = writeGroupsScheduleToDB;
-// writeGroupsScheduleToDB(url, db, dbGroupsCollection);
-writeTeachersScheduleToDB(url, db, dbTeachersCollection);
+writeGroupsScheduleToDB(url, db, dbGroupsCollection);
+// writeTeachersScheduleToDB(url, db, dbTeachersCollection);

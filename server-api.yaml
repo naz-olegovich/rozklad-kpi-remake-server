@@ -68,6 +68,77 @@ paths:
             items:
               $ref: "#/definitions/ServerError"
 
+  /api/groups/{groupId}/lessons:
+    get:
+      tags:
+        - "Groups"
+      summary: "Get schedule for group by id"
+      description: "Returns a list of subjects for a necessary group"
+      operationId: "getGroupLessonsById"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupId"
+          in: "path"
+          description: "ID of necessary group"
+          required: true
+          type: "integer"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GroupLessons"
+        "404":
+          description: "Group not found"
+          schema:
+            items:
+              $ref: "#/definitions/GroupError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
+
+  /api/groups/{groupName}/lessons:
+    get:
+      tags:
+        - "Groups"
+      summary: "Get schedule for group by name"
+      description: "Returns a list of subjects for a necessary group"
+      operationId: "getGroupLessonsByNeme"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "groupName"
+          in: "path"
+          description: "Name of necessary group"
+          required: true
+          type: "string"
+
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GroupLessons"
+        "404":
+          description: "Group not found"
+          schema:
+            items:
+              $ref: "#/definitions/GroupError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
+
+
+
+
   /api/groups/{groupId}/timetable:
     get:
       tags:
@@ -249,40 +320,6 @@ paths:
             items:
               $ref: "#/definitions/ServerError"
 
-  /api/teachers/{teacherName}/timetable:
-    get:
-      tags:
-        - "Teachers"
-      summary: "Get timetable for teacher by name"
-      description: "Returns the schedule for a necessary teacher in a hierarchical form"
-      operationId: "getTeacherTimetableByName"
-      consumes:
-        - "multipart/form-data"
-      produces:
-        - "application/json"
-      parameters:
-        - name: "teacherName"
-          in: "path"
-          description: "Name of necessary teacher"
-          required: true
-          type: "string"
-
-      responses:
-        "200":
-          description: "successful response"
-          schema:
-            $ref: "#/definitions/TeacherTimatable"
-        "404":
-          description: "Teacher not found"
-          schema:
-            items:
-              $ref: "#/definitions/TeacherError"
-        "500":
-          description: "Server error occurred"
-          schema:
-            items:
-              $ref: "#/definitions/ServerError"
-
   /api/teachers/{teacherId}/timetable:
     get:
       tags:
@@ -317,8 +354,39 @@ paths:
             items:
               $ref: "#/definitions/ServerError"
 
+  /api/teachers/{teacherName}/timetable:
+    get:
+      tags:
+        - "Teachers"
+      summary: "Get timetable for teacher by name"
+      description: "Returns the schedule for a necessary teacher in a hierarchical form"
+      operationId: "getTeacherTimetableByName"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "teacherName"
+          in: "path"
+          description: "Name of necessary teacher"
+          required: true
+          type: "string"
 
-
+      responses:
+        "200":
+          description: "successful response"
+          schema:
+            $ref: "#/definitions/TeacherTimatable"
+        "404":
+          description: "Teacher not found"
+          schema:
+            items:
+              $ref: "#/definitions/TeacherError"
+        "500":
+          description: "Server error occurred"
+          schema:
+            items:
+              $ref: "#/definitions/ServerError"
 
 
 # securityDefinitions:
@@ -351,6 +419,71 @@ definitions:
 
       type:
         type: "string"
+
+
+  GroupLessons:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+
+      name:
+        type: "string"
+
+      prefix:
+        type: "string"
+
+      okr:
+        type: "string"
+
+      type:
+        type: "string"
+
+      lessons:
+        type: "object"
+        properties:
+          lesson_id:
+            type: "integer"
+          day_number:
+            type: "integer"
+          day_name:
+            type: "string"
+          lesson_name:
+            type: "string"
+          lesson_full_name:
+            type: "string"
+          lesson_number:
+            type: "integer"
+          lesson_room:
+            type: "string"
+          lesson_type:
+            type: "string"
+          teacher_name:
+            type: "string"
+          lesson_week:
+            type: "integer"
+          time_start:
+            type: "string"
+          time_end:
+            type: "string"
+          rate:
+            type: "number"
+          teachers:
+            type: "object"
+          rooms:
+            type: "object"
+            properties:
+              room_id:
+                type: "integer"
+              room_name:
+                type: "string"
+              room_latitude:
+                type: "number"
+              room_longitude:
+                type: "number"
+
+
 
 
 

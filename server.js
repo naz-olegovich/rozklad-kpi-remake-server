@@ -34,7 +34,7 @@ MongoClient.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true}, as
 
 
 app.get('/api/groups', (req, res) => {
-    const projection = {"weeks": 0};
+    const projection = {"lessons": 0};
     const queryFilterParams = req.query;
     const limit = parseInt(queryFilterParams.limit, 10) || 500;
     const offset = parseInt(queryFilterParams.offset, 10) || 0;
@@ -51,14 +51,34 @@ app.get('/api/groups', (req, res) => {
         .catch(err => res.status(500).json({statusCode: 500, message: "Server error occurred"}));
 })
 
-
-app.get('/api/groups/:group/timetable', (req, res) => {
-    const query = {$or: [{_id: parseInt(req.params.group, 10)}, {name: req.params.group}]};
+app.get('/api/groups/:group/lessons', (req, res) => {
+    const query = {$or: [{_id: parseInt(req.params.group, 10)}, {name: req.params.group}]}; // dont forget to change id value to int
     db.collection(dbGroupsCollection).findOne(query)
         .then(dbResult => {
             dbResult ?
                 res.status(200).json(dbResult) :
                 res.status(404).json({statusCode: 404, message: "Group not found"});
+        })
+        .catch(err => res.status(500).json({statusCode: 500, message: `Error occurred`}));
+})
+
+app.get('/api/groups/:group/timetable', (req, res) => {
+    const query = {$or: [{_id: parseInt(req.params.group, 10)}, {name: req.params.group}]};
+    db.collection(dbGroupsCollection).findOne(query)
+        .then(dbResult => {
+            if (dbResult) {
+                const groupData = {
+                    id: dbResult._id,
+                    name: dbResult.name,
+                    prefix: dbResult.prefix,
+                    okr: dbResult.okr,
+                    type: dbResult.type
+                };
+                const timetable = jsonProcessing.createTimetable(dbResult.lessons)
+                res.status(200).json(Object.assign(groupData, timetable))
+            } else {
+                res.status(404).json({statusCode: 404, message: "Group not found"})
+            }
         })
         .catch(err => res.status(500).json({statusCode: 500, message: "Server error occurred"}));
 })
@@ -81,7 +101,6 @@ app.get('/api/teachers', (req, res) => {
         })
         .catch(err => res.status(500).json({statusCode: 500, message: "Error occurred"}));
 })
-
 
 app.get('/api/teachers/:teacher/lessons', (req, res) => {
     const query = {$or: [{_id: parseInt(req.params.teacher, 10)}, {name: req.params.teacher}]}; // dont forget to change id value to int

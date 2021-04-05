@@ -73,11 +73,18 @@ function createTimetable(lessons) {
                 }
             }
         }
+    };
+
+    try {
+        lessons.forEach(lesson => {
+            timeTable["weeks"][lesson.lesson_week]["days"][lesson.day_number]["lessons"].push(lesson)
+        });
+    } catch (err){
+        console.log("Lessons are empty");
+        timeTable["weeks"] = null
+
     }
-    lessons.forEach(lesson => {
-        timeTable["weeks"][lesson.lesson_week]["days"][lesson.day_number]["lessons"].push(lesson)
-    })
-    return timeTable
+    return timeTable;
 }
 
-module.exports.createTimetable = createTimetable
+module.exports.createTimetable = createTimetable;
