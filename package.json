@@ -18,12 +18,18 @@
   },
   "homepage": "https://github.com/naz-olegovich/rozklad_kpi_remake#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "jest": "^26.6.3",
     "mongodb": "^3.6.5",
-    "node-fetch": "^2.6.1"
+    "mongoose": "^5.12.3",
+    "node-fetch": "^2.6.1",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "yamljs": "^0.3.0"
   },
   "keywords": [
     "node",

@@ -1,6 +1,9 @@
 const fetch = require("node-fetch");
-const MongoClient = require("mongodb").MongoClient;
-const {url, db, collection} = require("../config").connection;
+// const MongoClient = require("mongodb").MongoClient;
+const config = require("../config");
+const mongoose = require('mongoose');
+const Group = require('./models/Group');
+const Teachers = require('./models/Teacher');
 
 
 function checkStatus(res) {
@@ -13,7 +16,7 @@ function checkStatus(res) {
 
 function showLogMessage(type, message) {
     const warningColor = '\x1b[1;33m';
-    const infoColor = '\x1b[1;37m';
+    const infoColor = '\x1b[0m';
 
     if (type === 'warning') {
         console.log(warningColor + message);
@@ -29,66 +32,90 @@ async function getGroups() {
         .then(res => res.json())
         .then(json => json.meta.total_count) // getting count of groups
         .then(async function (count) {
-            showLogMessage("info",`There are ${count} groups`);
+            showLogMessage("info", `There are ${count} groups`);
             const limit = Math.ceil(count / 100); // count of groups divided by 100 to get timetables 100 in one request
 
             for (let i = 0; i < limit; i++) {
-                await fetch("http://api.rozklad.org.ua/v2/groups/?filter={'limit':100,'offset':" + (i * 100) + "}")
+                await fetch(`http://api.rozklad.org.ua/v2/groups/?filter={'limit':100,'offset': ${i * 100}}`)
                     .then(res => res.json())
-                    .then(json => json.data.map(x => groups.push({id: x.group_id, name: x.group_full_name})))
+                    .then(json => json.data.map(obj => {
+                        const group = {
+                            id: obj.group_id,
+                            name: obj.group_full_name,
+                            prefix: obj.group_prefix,
+                            okr: obj.group_okr,
+                            type: obj.group_type
+                        };
+                        groups.push(group);
+                    }))
             }
-        }).catch(err => {
-            // Some actions before throwing;
-            throw err;
         })
     return groups;
 }
 
-function writeScheduleToDB(dbUrl, dbName, dbCollection) {
-    getGroups().then(groups =>
-        // Connection to Mongo database
-        MongoClient.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true},
-            async function (err, client) {
-                if (err) throw err;
-                const maxIndexOfGroups = groups.length - 1;
-                const db = client.db(dbName);
-                const collection = db.collection(dbCollection);
-                await collection.deleteMany({}); //cleaning all collection
 
-                for (let group of groups) {
-                    await fetch(encodeURI("https://api.rozklad.org.ua/v2/groups/" + group.name + "/timetable"))
-                        .then(res => res.json())
-                        .then(json => {
+async function getTeachers() {
+    let teachers = [];
+    await fetch("https://api.rozklad.org.ua/v2/teachers")
+        .then(checkStatus)
+        .then(res => res.json())
+        .then(json => json.meta.total_count) // getting count of groups
+        .then(async function (count) {
+            showLogMessage("info", `There are ${count} teachers`);
+            const limit = Math.ceil(count / 100); // count of groups divided by 100 to get timetables 100 in one request
 
-                            let schedule = {
-                                _id: group.id,
-                                name: group.name,
-                                weeks: (json.data) ? json.data.weeks : null
-                            }
+            for (let i = 0; i < limit; i++) {
+                await fetch(`https://api.rozklad.org.ua/v2/teachers/?filter={'limit':100,'offset': ${i * 100}}`)
+                    .then(res => res.json())
+                    .then(json => json.data.map(obj => {
+                        const teacher = {
+                            id: obj.teacher_id,
+                            name: obj.teacher_name,
+                            fullName: obj.teacher_full_name,
+                            shortName: obj.teacher_short_name,
+                        };
+                        teachers.push(teacher);
+                    }))
+            }
+        })
+    return teachers;
+}
 
-                            // adding schedule to db
-                            collection.insertOne(schedule, (err, res) => {
-                                if (err) throw err;
-                                if (groups.indexOf(group) === maxIndexOfGroups) client.close();
 
-                                (json.data) ?
-                                    showLogMessage('info', `${group.id} - (${group.name}) => schedule successfully added`) :
-                                    showLogMessage('warning', `${group.id} - (${group.name}) => schedule is null`)
-                            });
+function writeScheduleToDB(getListFunc, dbUrl, apiUrl, model) {
+    getListFunc().then(async elements => {
+        const maxIndex = elements.length - 1;
+        await mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+        await model.deleteMany({})
 
-                        })
-                        .catch(err => {
-                            // Some actions before throwing;
-                            throw err;
-                        })
-                }
+        for (let element of elements) {
+            await fetch(encodeURI(apiUrl + `${element.id}/lessons`))
+                .then(res => res.json())
+                .then(async json => {
+                    const newObj = new model(element);
+                    newObj.lessons = (json.data) ? json.data : null;
+                    await newObj.save();
 
-            })).catch(err => {
-        console.log("Групи не отримано")
-        throw err
+                    (json.data) ?
+                        showLogMessage('info', `${element.id} - (${element.name}) => schedule successfully added`) :
+                        showLogMessage('warning', `${element.id} - (${element.name}) => schedule is null`);
+                    if (elements.indexOf(element) === maxIndex) await mongoose.connection.close();
+
+
+                })
+                .catch(async err => {
+                    showLogMessage("info", "Error while retrieving lessons");
+                    showLogMessage("info", "Closing db connection");
+                    await mongoose.connection.close();
+                    console.log(err)
+                })
+        }
     })
 }
 
-module.exports.writeScheduleToDB = writeScheduleToDB
-writeScheduleToDB(url, db, collection);
+writeScheduleToDB(getTeachers, config.dbUrl, 'https://api.rozklad.org.ua/v2/teachers/', Teachers)
 
+
+module.exports.writeScheduleToDB = writeScheduleToDB;
+
+// writeTeachersScheduleToDB(url, db, dbTeachersCollection);
