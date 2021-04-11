@@ -6,6 +6,6 @@ const Teacher = new Schema({
     fullName: {type: String},
     shortName: {type: String},
     lessons: {type: Array}
-})
+}, { collection: 'test' })
 
 module.exports = model("Teacher", Teacher)

@@ -28,6 +28,7 @@
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
+    "cors": "^2.8.5",
     "nodemon": "^2.0.7",
     "yamljs": "^0.3.0"
   },
