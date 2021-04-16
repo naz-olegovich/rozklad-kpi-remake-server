@@ -1,6 +1,13 @@
 'use strict';
 
+/**
+ * Створює ієрархічно впорядкований розклад
+ *
+ * @param {Array} lessons - Список усіх предметів
+ * @return {Object} timeTable - Ієрархічно впорядкований розклад
+ * */
 function createTimetable(lessons) {
+    // Шаблон об'єкту розкладу
     const timeTable = {
         weeks: {
             '1': {

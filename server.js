@@ -10,7 +10,7 @@ const PORT = config.port;
 const dbUrl = config.dbUrl;
 
 const app = express();
-app.set('json spaces', 2);
+app.set('json spaces', 2);  // Встановлення форматування для json відповіді
 app.use('/api', scheduleRouter);
 
 const swaggerDocument = YAML.load('./server-api.yaml');
