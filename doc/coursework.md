@@ -54,7 +54,7 @@
 ## Проектування
 **Діаграма юзкейсів**
 
-![](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/ozklad-kpi-remake-server/blob/main/doc/uml/diagram1.plum)
+<img src = "http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/media_content_analysis_system/master/src/uml/diagam1.puml" /></p>
 
 **Сценарій перегляду загальної інформації**
 
