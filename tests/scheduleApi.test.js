@@ -6,7 +6,7 @@ const app = express();
 const { dbUrl } = require('../config');
 const Groups = require('../src/models/Group');
 const Teacher = require('../src/models/Teacher');
-
+const jsonProcessing = require('../src/jsonProcessing');
 
 beforeAll(async () => {
     await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
@@ -77,6 +77,18 @@ describe('testing groups api" ', () => {
             "message": "Group not found",
             "statusCode": 404
         })
+    });
+
+    it('GET /groups/:id/timetable (by name) - success', async () => {
+        const res = await request(app).get(`/api/groups/${encodeURI('ів-91')}/timetable`); //uses the request function that calls on express app instance
+        const query = { $or: [{ id: 537 }] };
+        const projection = { _id: 0, __v: 0 };
+        const {id, name, prefix, okr,type ,lessons} = await Groups.findOne(query, projection);
+        const { weeks } = jsonProcessing.createTimetable(lessons);
+
+        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toEqual({ id,name,prefix,okr,type, weeks });
     });
 
 });
