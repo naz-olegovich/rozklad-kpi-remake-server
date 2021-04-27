@@ -11,27 +11,27 @@ const jsonProcessing = require('../src/jsonProcessing');
 beforeAll(async () => {
     await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
     app.use('/api', scheduleRouter);
-})
+});
 
 afterAll(async () => {
-    await mongoose.connection.close()
-})
+    await mongoose.connection.close();
+});
 
 describe('testing groups api" ', () => {
     it('GET /api/group (with limit)', async () => {
         const res = await request(app).get('/api/groups?limit=500'); //uses the request function that calls on express app instance
-        const expectedFromDb = await Groups.find({}, { _id: 0, __v: 0, lessons: 0 }).limit(500)
+        const expectedFromDb = await Groups.find({}, { _id: 0, __v: 0, lessons: 0 }).limit(500);
 
-        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(mongoose.connection.readyState).toEqual(1); //1: connected
         expect(res.statusCode).toEqual(200);
         expect(res.body).toEqual(JSON.parse(JSON.stringify(expectedFromDb)));
     });
 
     it('GET /api/group (with offset)', async () => {
         const res = await request(app).get('/api/groups?offset=500'); //uses the request function that calls on express app instance
-        const expectedFromDb = await Groups.find({}, { _id: 0, __v: 0, lessons: 0 }).limit(500).skip(500)
+        const expectedFromDb = await Groups.find({}, { _id: 0, __v: 0, lessons: 0 }).limit(500).skip(500);
 
-        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(mongoose.connection.readyState).toEqual(1); //1: connected
         expect(res.statusCode).toEqual(200);
         expect(res.body).toEqual(JSON.parse(JSON.stringify(expectedFromDb)));
     });
@@ -43,7 +43,7 @@ describe('testing groups api" ', () => {
         const projection = { _id: 0, __v: 0 };
         const expectedFromDb = await Groups.findOne(query, projection);
 
-        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(mongoose.connection.readyState).toEqual(1); //1: connected
         expect(res.statusCode).toEqual(200);
         expect(res.body).toEqual(JSON.parse(JSON.stringify(expectedFromDb)));
     });
@@ -54,9 +54,9 @@ describe('testing groups api" ', () => {
 
         expect(res.statusCode).toEqual(404);
         expect(res.body).toEqual({
-            "message": "Group not found",
-            "statusCode": 404
-        })
+            'message': 'Group not found',
+            'statusCode': 404
+        });
     });
 
     it('GET /groups/:id/lessons (by name) - success', async () => {
@@ -65,7 +65,7 @@ describe('testing groups api" ', () => {
         const projection = { _id: 0, __v: 0 };
         const expectedFromDb = await Groups.findOne(query, projection);
 
-        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(mongoose.connection.readyState).toEqual(1); //1: connected
         expect(res.statusCode).toEqual(200);
         expect(res.body).toEqual(JSON.parse(JSON.stringify(expectedFromDb)));
     });
@@ -74,21 +74,21 @@ describe('testing groups api" ', () => {
         const res = await request(app).get('/api/groups/some-unexpected-name/lessons');
         expect(res.statusCode).toEqual(404);
         expect(res.body).toEqual({
-            "message": "Group not found",
-            "statusCode": 404
-        })
+            'message': 'Group not found',
+            'statusCode': 404
+        });
     });
 
     it('GET /groups/:id/timetable (by name) - success', async () => {
         const res = await request(app).get(`/api/groups/${encodeURI('ів-91')}/timetable`); //uses the request function that calls on express app instance
         const query = { $or: [{ id: 537 }] };
         const projection = { _id: 0, __v: 0 };
-        const {id, name, prefix, okr,type ,lessons} = await Groups.findOne(query, projection);
+        const { id, name, prefix, okr, type, lessons } = await Groups.findOne(query, projection);
         const { weeks } = jsonProcessing.createTimetable(lessons);
 
-        expect(mongoose.connection.readyState).toEqual(1) //1: connected
+        expect(mongoose.connection.readyState).toEqual(1); //1: connected
         expect(res.statusCode).toEqual(200);
-        expect(res.body).toEqual({ id,name,prefix,okr,type, weeks });
+        expect(res.body).toEqual({ id, name, prefix, okr, type, weeks });
     });
 
 });

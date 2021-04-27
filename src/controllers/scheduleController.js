@@ -47,15 +47,8 @@ class ScheduleController {
             if (!group) {
                 return res.status(404).json({ statusCode: 404, message: 'Group not found' });
             }
-            return res.status(200).json({
-                // Упорядкування відповіді
-                id: group['id'],
-                name: group['name'],
-                prefix: group['prefix'],
-                okr: group['okr'],
-                type: group['type'],
-                lessons: group['lessons']
-            });
+            const { id, name, prefix, okr, type, lessons } = group;
+            return res.status(200).json({ id, name, prefix, okr, type, lessons });
 
         } catch (e) {
             console.log(e);
@@ -75,19 +68,13 @@ class ScheduleController {
             const query = { $or: [{ id: parseInt(req.params['group'], 10) }, { name: req.params['group'] }] };
             const projection = { _id: 0, __v: 0 };
             const group = await Groups.findOne(query, projection);
+
             if (!group) {
                 return res.status(404).json({ statusCode: 404, message: 'Group not found' });
             }
-
-            const groupData = {
-                id: group['id'],
-                name: group['name'],
-                prefix: group['prefix'],
-                okr: group['okr'],
-                type: group['type'],
-            };
-            const timetable = jsonProcessing.createTimetable(group['lessons']);
-            res.status(200).json(Object.assign(groupData, timetable));
+            const { id, name, prefix, okr, type, lessons } = group;
+            const { weeks } = jsonProcessing.createTimetable(lessons);
+            res.status(200).json({ id, name, prefix, okr, type, weeks });
 
 
         } catch (e) {
@@ -137,13 +124,9 @@ class ScheduleController {
             if (!teacher) {
                 return res.status(404).json({ statusCode: 404, message: 'Teacher not found' });
             }
-            return res.status(200).json({
-                id: teacher['id'],
-                name: teacher['name'],
-                fullName: teacher['fullName'],
-                shortName: teacher['shortName'],
-                lessons: teacher['lessons']
-            });
+            const { id, name, fullName, shortName, lessons } = teacher;
+            return res.status(200).json({ id, name, fullName, shortName, lessons });
+
         } catch (e) {
             console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
@@ -165,15 +148,9 @@ class ScheduleController {
             if (!teacher) {
                 return res.status(404).json({ statusCode: 404, message: 'Teacher not found' });
             }
-
-            const teacherData = {
-                id: teacher['id'],
-                name: teacher['name'],
-                fullName: teacher['fullName'],
-                shortName: teacher['shortName'],
-            };
-            const timetable = jsonProcessing.createTimetable(teacher['lessons']);
-            res.status(200).json(Object.assign(teacherData, timetable));
+            const { id, name, fullName, shortName, lessons } = teacher;
+            const { weeks } = jsonProcessing.createTimetable(lessons);
+            res.status(200).json({ id, name, fullName, shortName, weeks });
 
         } catch (e) {
             console.log(e);
