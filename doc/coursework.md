@@ -54,7 +54,6 @@
 ## Проектування
 **Діаграма юзкейсів**
 
-<img src = "http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/diagram1.puml"/></p>
 
 **Сценарій перегляду загальної інформації**
 
@@ -76,35 +75,25 @@
 
 **Головна сторінка**
 
-![Головна сторінка](img/Home.png)
 
 **Сторінка входу**
 
-![Сторінка входу](img/Login.png)
 
 **Сторінка реєстрації**
 
-![Сторінка реєстрації](img/Register.png)
 
 **Сторінка користувача**
 
-![Сторінка користувача](img/UsrProj.png)
 
 **Сторінка інформації про користувача**
 
-![Сторінка інформації про користувача](img/UserInfo.png)
 
 **Сторінка проекту для користувача-учасника**
 
-![Сторінка проекту для користувача-учасника](img/ContrProj.png)
 
 **Стрінка проекту для користувача-аналітика:**
 
-![](img/AdminProj1.png)
 
-![](img/AdminProj2.png)
-
-![](img/AdminProj3.png)
 
 <a name="розробка"></a>
 ## Розробка
