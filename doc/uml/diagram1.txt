@@ -1,9 +1,9 @@
 @startuml
 actor User as Guest
     actor "RegisteredUser" as RegisteredUser
-
-
-
+    
+    
+    
     Guest <|-- RegisteredUser
 
     usecase "Register" as SE_1
@@ -11,9 +11,9 @@ actor User as Guest
 
     usecase "Login" as SE_3
     usecase "Create events" as SE_4
-
-
-
+   
+    
+    
     Guest -u-> SE_1
     Guest -u-> SE_2
 
