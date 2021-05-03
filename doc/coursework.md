@@ -53,7 +53,7 @@
 <a name="проектування"></a>
 ## Проектування
 **Діаграма юзкейсів**
-![UC001](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/diagram1.puml)
+![UC001](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/diagram1.txt)
 
 **Сценарій перегляду розкладу занять для студентів**
 
