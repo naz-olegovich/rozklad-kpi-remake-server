@@ -1,9 +1,9 @@
 @startuml
-User -> System: Tap on input field
-User -> System: Start entering group name
-System -> User: Offer dropdown list with suggestions of group names
-User -> System: Enter a full group name or choose a name from the dropdown list
-User -> System: Tap on "Розклад занять" button
+User -> System: Taps on input field
+User -> System: Starts entering group name
+System -> User: Offers dropdown list with suggestions of group names
+User -> System: Entesr a full group name or chooses a name from the dropdown list
+User -> System: Taps on "Schedule" button
 System -> System: Checks for matches in database
 System -> User: Schedule for requested group
 @enduml
