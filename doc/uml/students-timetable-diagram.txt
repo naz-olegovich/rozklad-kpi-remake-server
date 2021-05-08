@@ -1,0 +1,9 @@
+@startuml
+User -> System: Tap on input field
+User -> System: Start entering group name
+System -> User: Offer dropdown list with suggestions of group names
+User -> System: Enter a full group name or choose a name from the dropdown list
+User -> System: Tap on "Розклад занять" button
+System -> System: Checks for matches in database
+System -> User: Schedule for requested group
+@enduml
