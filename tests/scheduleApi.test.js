@@ -11,6 +11,7 @@ const jsonProcessing = require('../src/jsonProcessing');
 beforeAll(async () => {
     await mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
     app.use('/api', scheduleRouter);
+    jest.setTimeout(30000);
 });
 
 afterAll(async () => {

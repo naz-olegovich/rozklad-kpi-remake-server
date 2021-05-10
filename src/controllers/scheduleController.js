@@ -18,7 +18,6 @@ class ScheduleController {
             const queryFilterParams = req.query;
             const limit = parseInt(queryFilterParams.limit, 10) || 500;
             const offset = parseInt(queryFilterParams.offset, 10) || 0;
-
             const groupsList = await Groups.find({}, projection).limit(limit).skip(offset);
 
             if (!groupsList) {
@@ -26,8 +25,8 @@ class ScheduleController {
             }
             return res.status(200).json(groupsList);
         } catch (e) {
-            console.log(e);
-            return res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e;
         }
     }
 
@@ -51,8 +50,8 @@ class ScheduleController {
             return res.status(200).json({ id, name, prefix, okr, type, lessons });
 
         } catch (e) {
-            console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e;
         }
     }
 
@@ -78,8 +77,8 @@ class ScheduleController {
 
 
         } catch (e) {
-            console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e;
         }
     }
 
@@ -103,8 +102,8 @@ class ScheduleController {
             }
             return res.status(200).json(teachersList);
         } catch (e) {
-            console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e;
         }
     }
 
@@ -128,8 +127,8 @@ class ScheduleController {
             return res.status(200).json({ id, name, fullName, shortName, lessons });
 
         } catch (e) {
-            console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e;
         }
     }
 
@@ -153,8 +152,8 @@ class ScheduleController {
             res.status(200).json({ id, name, fullName, shortName, weeks });
 
         } catch (e) {
-            console.log(e);
             res.status(500).json({ statusCode: 500, message: 'Server error occurred' });
+            throw e
         }
     }
 
