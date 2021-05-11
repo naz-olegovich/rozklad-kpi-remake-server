@@ -154,7 +154,13 @@
 
 <a name="джерела"></a>
 ## Джерела
-
-1. 
-2. 
-3. 
+1. https://expressjs.com/en/guide/routing.html
+2. https://docs.mongodb.com/guides/
+3. https://mongoosejs.com/docs/guide.html
+4. https://www.npmjs.com/package/node-fetch
+5. https://vuejs.org/v2/guide/
+6. https://www.youtube.com/watch?v=5LYrN_cAJoA&list=PL4cUxeGkcC9gQcYgjhBoeQH7wiAyZNrYa
+7. https://www.robinwieruch.de/node-express-server-rest-api
+8. https://api.rozklad.org.ua/
+9. https://swagger.io/solutions/api-development/
+10. https://www.codementor.io/@olatundegaruba/nodejs-restful-apis-in-10-minutes-q0sgsfhbd
