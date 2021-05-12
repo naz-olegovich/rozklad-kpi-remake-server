@@ -137,17 +137,18 @@
 
 **Головна сторінка**
 
-**Сторінка розкладу занять груп**
+**Сторінка пошуку розкладу занять груп**
+![search_group_schedule_page](https://github.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/images/search_group_schedule_page.png)
+**Сторінка пошуку розкладу викладачів**
+![search_teacher_schedule_page](https://github.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/images/search_teacher_schedule_page.png)
+**Сторінка пошуку розкладу сесій**
+![search_exam_schedule_page](https://github.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/images/search_exam_schedule_page.png)
+**Фільтер пошуку**
+![search_filter](https://github.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/images/search_filter.png)
+**Сторінка розкладу занять групи**
+![group_schedule_page](https://github.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/images/group_schedule_page.png)
 
-**Сторінка розкладу викладачів**
 
-**Сторінка розкладу сесій**
-
-**Сторінка входу**
-
-**Сторінка реєстрації**
-
-**Сторінка додавання подій**
 
 <a name="тести"></a>
 ## Тестування
