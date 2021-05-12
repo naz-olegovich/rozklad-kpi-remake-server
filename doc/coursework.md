@@ -68,7 +68,7 @@
 <a name="проектування"></a>
 ## Проектування
 **Діаграма юзкейсів**
-![Use cases diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/diagram1.pml)
+![Use cases diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/diagram1.pml")
 
 **Сценарій перегляду розкладу занять для студентів**
 
