@@ -68,6 +68,7 @@
 <a name="проектування"></a>
 ## Проектування
 **Діаграма юзкейсів**
+
 ![Use cases diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/main/doc/uml/diagram1.pml)
 
 **Сценарій перегляду розкладу занять для студентів**
@@ -115,16 +116,20 @@
 ### Діаграми послідовностей
 
 **Діаграма STUDENTS-TIMETABLE**
-![Students timetable diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/students-timetable-diagram.pml)
+
+![Students timetable diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/main/doc/uml/students-timetable-diagram.pml)
 
 **Діаграма REGISTRATION**
-![Registration diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/registration-diagram.pml)
+
+![Registration diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/main/doc/uml/registration-diagram.pml)
 
 **Діаграма LOG-IN**
-![Log-in diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/log-in-diagram.pml)
+
+![Log-in diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/main/doc/uml/log-in-diagram.pml)
 
 **Діаграма ADD-EVENT**
-![Add event diagram]("http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/blob/main/doc/uml/add-event-diagram.pml)
+
+![Add event diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/naz-olegovich/rozklad-kpi-remake-server/main/doc/uml/add-event-diagram.pml)
 
 
 
